@@ -3,7 +3,7 @@ import Peer from 'simple-peer'
 import io from 'socket.io-client'
 
 
-const socket = io.connect('http://localhost:5000')
+// const socket = io.connect('http://localhost:5000')
 
 const Meet = () => {
     const [stream, setStream] = useState()
@@ -22,41 +22,41 @@ const Meet = () => {
     const connectionRef = useRef()
     const socketRef = useRef(null)
 
-    useEffect(() => {
-        navigator.mediaDevices.getUserMedia({ video: false, audio: true }).then((stream) => {
-            if (!MediaRecorder.isTypeSupported('audio/webm')) return alert('Not supported')
+    // useEffect(() => {
+    //     navigator.mediaDevices.getUserMedia({ video: false, audio: true }).then((stream) => {
+    //         if (!MediaRecorder.isTypeSupported('audio/webm')) return alert('Not supported')
 
-            const mediaRecorder = new MediaRecorder(stream, {
-                mimeType: 'audio/webm'
-            })
+    //         const mediaRecorder = new MediaRecorder(stream, {
+    //             mimeType: 'audio/webm'
+    //         })
 
-            const socket = new WebSocket('ws://localhost:3002')
+    //         const socket = new WebSocket('ws://localhost:3002')
             
-            socket.onopen = () => {
-                mediaRecorder.addEventListener('dataavailable', async (event) => {
-                    console.log(event.data.size)
-                    if(event.data.size > 0 ) {
-                        console.log('streaming', event.data)
-                        socket.send(event.data)
-                    }
-                })
+    //         socket.onopen = () => {
+    //             mediaRecorder.addEventListener('dataavailable', async (event) => {
+    //                 console.log(event.data.size)
+    //                 if(event.data.size > 0 ) {
+    //                     console.log('streaming', event.data)
+    //                     socket.send(event.data)
+    //                 }
+    //             })
                 
-                mediaRecorder.start(1000)               
-            }
+    //             mediaRecorder.start(1000)               
+    //         }
 
-            socket.onmessage = (message) => {
-                const received = JSON.parse(message.data)
-                const transcript = received.channel.alternatives[0].transcript
-                if(transcript) {
-                    console.log(transcript)
-                    setAffirmation(transcript)
-                }
-            }
-            socketRef.current = socket
+    //         socket.onmessage = (message) => {
+    //             const received = JSON.parse(message.data)
+    //             const transcript = received.channel.alternatives[0].transcript
+    //             if(transcript) {
+    //                 console.log(transcript)
+    //                 setAffirmation(transcript)
+    //             }
+    //         }
+    //         socketRef.current = socket
 
-        })
+    //     })
 
-    }, [])
+    // }, [])
 
     const callUser = (id) => {
         const peer = new Peer({
