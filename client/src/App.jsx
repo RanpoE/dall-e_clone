@@ -4,13 +4,12 @@ import React from 'react'
 import { useState } from 'react'
 import { BrowserRouter, Link, Routes, Route } from 'react-router-dom'
 import { nightmode, lightmode } from './assets'
-import { Home, CreatePost } from './pages'
+import { Home, CreatePost, GptPrompt } from './pages'
 
 export const ThemeContext = React.createContext()
 
 const App = () => {
   const [light, setLight] = useState(true)
-
   const handleChangeTheme = () => setLight(!light)
 
   return (
@@ -38,6 +37,11 @@ const App = () => {
                   Create
                 </Link>
               </li>
+              <li>
+                <Link to="/gpt-chat" className="font-inter font-medium bg-[#6469ff] text-white px-4 py-2 rounded-md" >
+                  Chat
+                </Link>
+              </li>
             </ul>
           </div>
         </header>
@@ -45,6 +49,7 @@ const App = () => {
           <Routes>
             <Route path='/' element={<Home />} />
             <Route path='/create-post' element={<CreatePost />} />
+            <Route path='/gpt-chat' element={<GptPrompt />} />
           </Routes>
         </main>
       </BrowserRouter>

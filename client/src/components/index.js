@@ -1,5 +1,6 @@
 import  Card  from "./Card";
 import Loader from "./Loader";
 import  FormField  from "./FormField";
+import Message from "./Message";
 
-export { Card, Loader, FormField }
+export { Card, Loader, FormField, Message}
