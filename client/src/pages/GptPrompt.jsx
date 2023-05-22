@@ -9,14 +9,14 @@ const GptPrompt = () => {
 
   const ENDPOINT = 'https://dall-e-api-h45e.onrender.com:8090'
 
-  useEffect(() => {
-    socket = io(ENDPOINT)
+  // useEffect(() => {
+  //   socket = io(ENDPOINT)
 
-    socket.on('message', (data) => {
-      setMessages([...messages, data])
-    })
+  //   socket.on('message', (data) => {
+  //     setMessages([...messages, data])
+  //   })
 
-  }, [ENDPOINT])
+  // }, [ENDPOINT])
 
   const handleChangeInput = (e) => {
     setMessage(e.target.value)
