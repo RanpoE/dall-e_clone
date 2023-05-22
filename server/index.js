@@ -44,6 +44,6 @@ io.on('connection', (socket) => {
 
 })
 
-io.listen(9090)
+io.listen(8090)
 
 startServer()

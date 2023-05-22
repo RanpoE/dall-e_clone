@@ -7,7 +7,7 @@ const GptPrompt = () => {
   const [message, setMessage] = useState('')
   const [messages, setMessages] = useState([])
 
-  const ENDPOINT = 'https://dall-e-api-h45e.onrender.com:9090'
+  const ENDPOINT = 'https://dall-e-api-h45e.onrender.com:8090'
 
   useEffect(() => {
     socket = io(ENDPOINT)
