@@ -3,20 +3,29 @@ import { Message } from '../components'
 import io from 'socket.io-client'
 
 let socket
+let name
 const GptPrompt = () => {
   const [message, setMessage] = useState('')
   const [messages, setMessages] = useState([])
 
-  const ENDPOINT = 'https://dall-e-api-h45e.onrender.com:8090'
+  const ENDPOINT = 'wss://jolly-phase-huckleberry.glitch.me/'
+  
+  useEffect(() => {
+    socket = io(ENDPOINT)
+    name = `user_${Math.floor(Math.random() * (1000 - 1 + 1) + 1)}`
+    // console.log('useEffect')
+    socket.emit('join', { name, room: 'Isekai' }, (error) => {
+			if (error) alert(error);
+		});
+    
+  }, [])
 
-  // useEffect(() => {
-  //   socket = io(ENDPOINT)
+  useEffect(() => {
+		socket.on('message', (message) => {
+			setMessages([...messages, message]);
+		});
+	}, [messages]);
 
-  //   socket.on('message', (data) => {
-  //     setMessages([...messages, data])
-  //   })
-
-  // }, [ENDPOINT])
 
   const handleChangeInput = (e) => {
     setMessage(e.target.value)
@@ -24,17 +33,15 @@ const GptPrompt = () => {
 
   const handleSendMessage = () => {
     if (message) {
+      socket.emit('message', message, () => { setMessage('')})
       console.log('sending message')
     }
   }
 
   return (
-    <div className='h-screen'>
-      <div className="w-full px-5 flex flex-col justify-between">
-        <div className="flex flex-col mt-5">
-          <div className="flex justify-end mb-4">
-            {messages.map((msg, idx) => <Message key={idx} message={msg} />)}
-          </div>
+    <div className='w-full px-5 flex flex-col justify-between'>
+      <div className="w-full px-5 ">
+            {messages.map((msg, idx) => <Message key={idx} message={msg} name={name} />)}
         </div>
         <div className="py-5">
           <input
@@ -47,7 +54,6 @@ const GptPrompt = () => {
           />
         </div>
       </div>
-    </div>
   )
 }
 
