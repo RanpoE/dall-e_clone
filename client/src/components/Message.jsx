@@ -19,7 +19,7 @@ const Message = ({ message: { user, text }, name }) => {
             </div> :
             <div className="flex justify-start mb-4">
                 <img
-                    src={user==='gpt'?robo:"https://source.unsplash.com/vpOeXr5wmR4/600x600"}
+                    src={user === 'gpt' ? robo : "https://source.unsplash.com/vpOeXr5wmR4/600x600"}
                     className="object-cover h-8 w-8 rounded-full"
                     alt=""
                 />
