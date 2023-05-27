@@ -40,7 +40,7 @@ const GptPrompt = () => {
 
   return (
     <div className='w-full px-5 flex flex-col rounded-lg justify-between'>
-      <div className="w-full p-5 mt-5 bg-white overflow-x-auto" style={{height: '70vh'}}>
+      <div className="w-full p-5 mt-5 bg-white overflow-auto" style={{height: '70vh'}}>
             {messages.map((msg, idx) => <Message key={idx} message={msg} name={name} />)}
         </div>
         <div className="py-5">
