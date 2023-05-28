@@ -11,6 +11,7 @@ export const ThemeContext = React.createContext()
 const App = () => {
   const [light, setLight] = useState(true)
   const handleChangeTheme = () => setLight(!light)
+  const [isOpen, setisOpen] = useState(false)
 
   return (
     <ThemeContext.Provider value={light}>

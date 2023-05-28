@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, createRef } from 'react'
 import { Message } from '../components'
 import io from 'socket.io-client'
 
@@ -7,24 +7,27 @@ let name
 const GptPrompt = () => {
   const [message, setMessage] = useState('')
   const [messages, setMessages] = useState([])
+  const messageRef = createRef()
 
   const ENDPOINT = 'wss://jolly-phase-huckleberry.glitch.me/'
-  
+
   useEffect(() => {
     socket = io(ENDPOINT)
     name = `user_${Math.floor(Math.random() * (1000 - 1 + 1) + 1)}`
     // console.log('useEffect')
     socket.emit('join', { name, room: 'Isekai' }, (error) => {
-			if (error) alert(error);
-		});
-    
+      if (error) alert(error);
+    });
+
   }, [])
 
   useEffect(() => {
-		socket.on('message', (message) => {
-			setMessages([...messages, message]);
-		});
-	}, [messages]);
+    socket.on('message', (message) => {
+      setMessages([...messages, message]);
+    });
+    const scroll = messageRef.current.scrollHeight - messageRef.current.clientHeight;
+    messageRef.current.scrollTo(0, scroll)
+  }, [messages]);
 
 
   const handleChangeInput = (e) => {
@@ -33,27 +36,28 @@ const GptPrompt = () => {
 
   const handleSendMessage = () => {
     if (message) {
-      socket.emit('message', message, () => { setMessage('')})
+      socket.emit('message', message, () => { setMessage('') })
       console.log('sending message')
     }
   }
 
   return (
     <div className='w-full px-5 flex flex-col rounded-lg justify-between'>
-      <div className="w-full p-5 mt-5 bg-white overflow-auto" style={{height: '70vh'}}>
-            {messages.map((msg, idx) => <Message key={idx} message={msg} name={name} />)}
-        </div>
-        <div className="py-5">
-          <input
-            className="w-full bg-gray-300 py-5 px-3 rounded-xl"
-            type="text"
-            placeholder="type your message here..."
-            onChange={handleChangeInput}
-            value={message}
-            onKeyDown={event => { if (event.keyCode === 13) { handleSendMessage() } }}
-          />
-        </div>
+      <div className="w-full p-5 mt-5 bg-white overflow-auto"
+        style={{ height: '70vh' }} ref={messageRef}>
+        {messages.map((msg, idx) => <Message key={idx} message={msg} name={name} />)}
       </div>
+      <div className="py-5">
+        <input
+          className="w-full bg-gray-300 py-5 px-3 rounded-xl"
+          type="text"
+          placeholder="type your message here..."
+          onChange={handleChangeInput}
+          value={message}
+          onKeyDown={event => { if (event.keyCode === 13) { handleSendMessage() } }}
+        />
+      </div>
+    </div>
   )
 }
 
