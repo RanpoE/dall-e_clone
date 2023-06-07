@@ -28,6 +28,7 @@ const Card = ({ _id, name, prompt, photo }) => {
              src={download}
              alt='download'
              className='w-6 h-6 object-contain invert'
+             loading='lazy'
              />
           </button>
         </div>
