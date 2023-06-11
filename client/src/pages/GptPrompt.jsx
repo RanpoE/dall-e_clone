@@ -42,11 +42,11 @@ const GptPrompt = () => {
   }
 
   return (
-    <div className='w-full px-5 flex flex-col h-full rounded-lg justify-between'>
-      <div className="w-full p-5 mt-5 h-full bg-white overflow-auto" ref={messageRef}>
+    <div className='w-full px-5 flex flex-col h-3/4 rounded-lg justify-between'>
+      <div className="w-full px-4 bg-white overflow-auto" ref={messageRef}>
         {messages.map((msg, idx) => <Message key={idx} message={msg} name={name} />)}
       </div>
-      <div className="py-5">
+      <div className="">
         <input
           className="w-full bg-gray-300 py-5 px-3 rounded-xl"
           type="text"
