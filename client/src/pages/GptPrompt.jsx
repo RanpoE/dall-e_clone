@@ -1,6 +1,7 @@
-import React, { useEffect, useState, createRef } from 'react'
+import React, { useEffect, useState, createRef, useRef } from 'react'
 import { Message } from '../components'
 import io from 'socket.io-client'
+import axios from 'axios'
 
 let socket
 let name
@@ -8,6 +9,7 @@ const GptPrompt = () => {
   const [message, setMessage] = useState('')
   const [messages, setMessages] = useState([])
   const messageRef = createRef()
+  const [audio, setAudio] = useState(null)
 
   const ENDPOINT = 'wss://jolly-phase-huckleberry.glitch.me/'
 
@@ -18,8 +20,22 @@ const GptPrompt = () => {
     socket.emit('join', { name, room: 'Isekai' }, (error) => {
       if (error) alert(error);
     });
-
   }, [])
+
+  const getAudio = async () => {
+    console.log(message)
+    const data = {
+      text: message
+    }
+    await axios({ method: 'post', url: 'http://localhost:8080/api/v1/polly/generate', data, responseType: 'arraybuffer' })
+      .then(res => {
+        const audioData = res.data;
+        const blob = new Blob([audioData], { type: 'audio/mp3' })
+        const url = URL.createObjectURL(blob);
+        setAudio(url)
+      })
+      .catch(err => console.error(err))
+  }
 
   useEffect(() => {
     socket.on('message', (message) => {
@@ -34,18 +50,22 @@ const GptPrompt = () => {
     setMessage(e.target.value)
   }
 
+
   const handleSendMessage = () => {
     if (message) {
+      setAudio(null)
+      getAudio()
       socket.emit('message', message, () => { setMessage('') })
       console.log('sending message')
     }
   }
 
   return (
-    <div className='w-full px-5 flex flex-col h-3/4 rounded-lg justify-between'>
+    <section className='max-w-7xl m-auto flex flex-col h-3/4 rounded-lg justify-between'>
       <div className="w-full px-4 bg-white overflow-auto" ref={messageRef}>
         {messages.map((msg, idx) => <Message key={idx} message={msg} name={name} />)}
       </div>
+      {audio && <audio autoPlay> <source src={audio} type="audio/mp3" /> </audio>}
       <div className="">
         <input
           className="w-full bg-gray-300 py-5 px-3 rounded-xl"
@@ -56,7 +76,7 @@ const GptPrompt = () => {
           onKeyDown={event => { if (event.keyCode === 13) { handleSendMessage() } }}
         />
       </div>
-    </div>
+    </section>
   )
 }
 

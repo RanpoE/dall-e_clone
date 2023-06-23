@@ -54,17 +54,17 @@ const App = () => {
           <nav className={`${isOpen ? "block" : "hidden"} w-full lg:flex lg:justify-evenly lg:w-auto`} >
             <ul className='text-base text-gray-600 lg:flex lg:justify-between'>
               <li>
-                <Link to="/create-post" className='lg:px-5 py-2 block hover:text-blue-700 font-sm
+                <Link to="/create-post" className='lg:px-5 py-5 block hover:text-blue-700 font-sm
                 '>Create</Link>
               </li>
               <li>
-                <Link to="/gpt-chat" className="lg:px-5 py-2 block hover:text-blue-700 font-sm
+                <Link to="/gpt-chat" className="lg:px-5 py-5 block hover:text-blue-700 font-sm
                 ">Chat</Link>
               </li>
             </ul>
           </nav>
         </header>
-        <main className='flex flex-col sm:p-8 px-4 w-full bg-[#f9fafe] h-screen'>
+        <main className='max-w sm:p-8 px-4 w-full bg-[#f9fafe] h-screen justify-between'>
           <Routes>
             <Route path='/' element={<Home />} />
             <Route path='/create-post' element={<CreatePost />} />
