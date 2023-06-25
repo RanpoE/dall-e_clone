@@ -17,7 +17,7 @@ const App = () => {
     <ThemeContext.Provider value={light}>
       <BrowserRouter>
         <header className='flex p-6 justify-between items-center
-        xl:max-w-7xl mx-auto max-w-full px-[5%] flex-wrap w-full'>
+        xl:max-w-7xl mx-auto max-w-full px-[3%] flex-wrap w-full'>
           <Link to="/">
             <img src={logo} alt='logo' className='w-28 object-contain' />
           </Link>
