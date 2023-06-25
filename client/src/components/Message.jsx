@@ -3,7 +3,6 @@ import { robo } from '../assets'
 
 const Message = ({ message: { user, text }, name }) => {
     const sendByUser = user === name && true
-
     return (
         sendByUser ?
             <div className="flex justify-end mb-4">

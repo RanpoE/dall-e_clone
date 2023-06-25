@@ -23,11 +23,13 @@ const GptPrompt = () => {
   }, [])
 
   const getAudio = async () => {
-    console.log(message)
+
+    const modMessage = message.toLowerCase()
+    modMessage.split('Narra')[1]
     const data = {
-      text: message
+      text: modMessage
     }
-    await axios({ method: 'post', url: 'http://localhost:8080/api/v1/polly/generate', data, responseType: 'arraybuffer' })
+    await axios({ method: 'post', url: 'https://dall-e-api-h45e.onrender.com/api/v1/polly/generate', data, responseType: 'arraybuffer' })
       .then(res => {
         const audioData = res.data;
         const blob = new Blob([audioData], { type: 'audio/mp3' })
@@ -54,7 +56,9 @@ const GptPrompt = () => {
   const handleSendMessage = () => {
     if (message) {
       setAudio(null)
-      getAudio()
+      // getAudio()
+      let lowMessage = message.toLocaleLowerCase()
+      if (lowMessage.includes('narra')) getAudio()
       socket.emit('message', message, () => { setMessage('') })
       console.log('sending message')
     }
