@@ -1,5 +1,5 @@
 import React, { useEffect, useState, createRef, useRef } from 'react'
-import { Message } from '../components'
+import { Message, WaveForm } from '../components'
 import io from 'socket.io-client'
 import axios from 'axios'
 
@@ -8,8 +8,10 @@ let name
 const GptPrompt = () => {
   const [message, setMessage] = useState('')
   const [messages, setMessages] = useState([])
+  const [analyzerData, setAnalyzerData] = useState(null)
   const messageRef = createRef()
   const [audio, setAudio] = useState(null)
+  const audioElmRef = useRef(null)
 
   const ENDPOINT = 'wss://jolly-phase-huckleberry.glitch.me/'
 
@@ -21,6 +23,27 @@ const GptPrompt = () => {
       if (error) alert(error);
     });
   }, [])
+
+  const audioAnalyzer = () => {
+    // create a new AudioContext
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    // create an analyzer node with a buffer size of 2048
+    const analyzer = audioCtx.createAnalyser();
+    analyzer.fftSize = 2048;
+
+    const bufferLength = analyzer.frequencyBinCount;
+    const dataArray = new Uint8Array(bufferLength);
+    const source = audioCtx.createMediaElementSource(audioElmRef.current);
+    source.connect(analyzer);
+    source.connect(audioCtx.destination);
+    source.onended = () => {
+      source.disconnect();
+    };
+
+    // set the analyzerData state with the analyzer, bufferLength, and dataArray
+    setAnalyzerData({ analyzer, bufferLength, dataArray });
+  };
+
 
   const getAudio = async () => {
 
@@ -47,6 +70,9 @@ const GptPrompt = () => {
     messageRef.current.scrollTo(0, scroll)
   }, [messages]);
 
+  useEffect(() => {
+    if (audioElmRef.current) audioAnalyzer()
+  }, [audio])
 
   const handleChangeInput = (e) => {
     setMessage(e.target.value)
@@ -66,11 +92,15 @@ const GptPrompt = () => {
 
   return (
     <section className='max-w-7xl m-auto flex flex-col h-3/4 rounded-lg justify-between'>
-      <div className="w-full px-4 bg-white overflow-auto" ref={messageRef}>
+      <div className="relative w-full p-4 bg-white overflow-auto" ref={messageRef}>
         {messages.map((msg, idx) => <Message key={idx} message={msg} name={name} />)}
+        {analyzerData && <div className='max-w-7xl m-auto' style={{ height: 120}}>
+          <WaveForm analyzerData={analyzerData} />
+        </div>}
       </div>
-      {audio && <audio autoPlay> <source src={audio} type="audio/mp3" /> </audio>}
-      <div className="">
+      {audio && <audio ref={audioElmRef} autoPlay > <source src={audio} type="audio/mp3" /> </audio>}
+
+      <div className="flex flex-col">
         <input
           className="w-full bg-gray-300 py-5 px-3 rounded-xl"
           type="text"
