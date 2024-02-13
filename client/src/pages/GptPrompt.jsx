@@ -91,25 +91,27 @@ const GptPrompt = () => {
   }
 
   return (
-    <section className='max-w-7xl m-auto flex flex-col h-3/4 rounded-lg justify-between'>
-      <div className="relative w-full p-4 bg-white overflow-auto" ref={messageRef}>
+    <section className='max-w-7xl m-auto flex flex-col  h-3/4 rounded-lg justify-between dark:bg-black'>
+      <div className="relative w-full p-4 bg-white overflow-auto dark:bg-black" ref={messageRef}>
         {messages.map((msg, idx) => <Message key={idx} message={msg} name={name} />)}
-        {analyzerData && <div className='max-w-7xl m-auto' style={{ height: 120}}>
+        {analyzerData && <div className='max-w-7xl m-auto px-10 overflow-hidden' style={{ height: 120 }}>
           <WaveForm analyzerData={analyzerData} />
         </div>}
       </div>
       {audio && <audio ref={audioElmRef} autoPlay > <source src={audio} type="audio/mp3" /> </audio>}
+      {messages.length > 0 &&
+        <div className="flex flex-col">
+          <input
+            className="w-full bg-gray-300 py-5 px-3 rounded-xl"
+            type="text"
+            placeholder="type your message here..."
+            onChange={handleChangeInput}
+            value={message}
+            onKeyDown={event => { if (event.key === 'Enter') { handleSendMessage() } }}
+          />
+        </div>
+      }
 
-      <div className="flex flex-col">
-        <input
-          className="w-full bg-gray-300 py-5 px-3 rounded-xl"
-          type="text"
-          placeholder="type your message here..."
-          onChange={handleChangeInput}
-          value={message}
-          onKeyDown={event => { if (event.keyCode === 13) { handleSendMessage() } }}
-        />
-      </div>
     </section>
   )
 }
