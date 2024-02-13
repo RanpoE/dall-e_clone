@@ -9,12 +9,13 @@ import { Home, CreatePost, GptPrompt } from './pages'
 export const ThemeContext = React.createContext()
 
 const App = () => {
-  const [light, setLight] = useState(true)
-  const handleChangeTheme = () => setLight(!light)
+  const [darkMode, setDarkMode] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
 
+  const changeTheme = () => setDarkMode(prev => !prev)
+
   return (
-    <ThemeContext.Provider value={light}>
+    <ThemeContext.Provider value={darkMode}>
       <BrowserRouter>
         <header className='flex p-6 justify-between items-center
         xl:max-w-7xl mx-auto max-w-full px-[3%] flex-wrap w-full'>
@@ -64,7 +65,7 @@ const App = () => {
             </ul>
           </nav>
         </header>
-        <main className='max-w sm:p-8 px-4 w-full bg-[#f9fafe] h-screen justify-between'>
+        <main className={`${darkMode && "dark"} max-w sm:p-8 px-4 w-full bg-[#f9fafe] h-screen justify-between`}>
           <Routes>
             <Route path='/' element={<Home />} />
             <Route path='/create-post' element={<CreatePost />} />
