@@ -1,29 +1,33 @@
 import express from 'express'
 import * as dotenv from 'dotenv'
 import bcryptjs from 'bcryptjs'
+import jwt from 'jsonwebtoken'
 
 import User from '../mongodb/models/user.js'
 
 dotenv.config()
 
 const router = express.Router()
-
+const SECRET_KEY = process.env.SECRET_KEY
 
 router.route('/').get((req, res) => {
     res.send('Hello from auth')
 })
 
-router.route('/register').post(async (req, res) => {
+router.route('/signup').post(async (req, res) => {
     const { username, password } = req.body
 
     if (!username || !password) return res.status(400).json({ message: "Complete the fields" })
 
     if (password.length < 6) return res.status(400).json({ message: "Password is less than 6 characters" })
     try {
+        const token = jwt.sign( {username }, SECRET_KEY, { expiresIn: '1h'})
+
         bcryptjs.hash(password, 10).then(async (hash) => {
             await User.create({
                 username,
                 password: hash,
+                token,
             }).then(user => res.status(201).json({
                 message: "User created",
                 user
@@ -40,6 +44,10 @@ router.route('/login').post(async (req, res) => {
     try {
         const user = await User.findOne({ username })
         if (!user) return res.status(404).json({ message: "Login failed", error: "User not found" })
+
+        const token = jwt.sign({ id: user._id }, SECRET_KEY, {expiresIn: '1h'})
+        user.token = token
+        
         bcryptjs.compare(password, user.password).then(result =>
             result ? res.status(200).json({ message: "Login successful", user }) :
                 res.status(401).json({ message: "Login failed." }))
