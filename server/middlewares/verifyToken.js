@@ -15,6 +15,7 @@ const verifyToken = async (req, res, next) => {
 
         if (err) return res.status(401).json({ message: 'Failed to authenticated token' })
 
+        // Adding logs for route the user has visited.
         const user = await UserSchema.findOne({ token })
 
         if (!user) return res.status(404).json({ message: 'User not found' })
@@ -25,5 +26,6 @@ const verifyToken = async (req, res, next) => {
         next()
     })
 }
+
 
 export default verifyToken

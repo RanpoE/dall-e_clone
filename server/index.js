@@ -9,6 +9,7 @@ import dalleRoutes from './routes/dalleRoutes.js'
 import pollyRoutes from './routes/pollyRoutes.js'
 import galleyRoutes from './routes/galleryRoutes.js'
 import authRoutes from './routes/authRoutes.js'
+import expenseRoutes from './routes/expenseRoutes.js'
 
 // import { Server as httpServ } from 'http'
 
@@ -27,6 +28,7 @@ app.use('/api/v1/dalle', dalleRoutes)
 app.use('/api/v1/polly', pollyRoutes)
 app.use('/api/v1/gallery', galleyRoutes)
 app.use('/api/v1/auth', authRoutes)
+app.use('/api/v1/expense', expenseRoutes)
 
 app.get('/', async (req, res) => {
     res.send('Hello from Server.')
