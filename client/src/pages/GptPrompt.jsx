@@ -20,7 +20,7 @@ const GptPrompt = () => {
     name = `user_${Math.floor(Math.random() * (1000 - 1 + 1) + 1)}`
     // console.log('useEffect')
     socket.emit('join', { name, room: 'Isekai' }, (error) => {
-      if (error) alert(error);
+      if (error) alert("error");
     });
   }, [])
 

@@ -7,12 +7,13 @@ dotenv.config()
 const router = express.Router()
 
 router.route('/').get(async (req, res) => {
-    const { date } = req.query
+    const { date, owner } = req.query
     try {
         const result = await ExpenseModel.find({
             date_created: {
                 $gt: new Date(date)
-            }
+            },
+            owner
         })
         return res.status(200).send(result)
     } catch (error) {
@@ -22,11 +23,13 @@ router.route('/').get(async (req, res) => {
 
 router.route('/').post(async (req, res) => {
     try {
-        const { name, amount } = req.body
+        const { name, amount, owner } = req.body
+        console.log(req.body)
 
         const newPost = await ExpenseModel.create({
             name,
-            amount
+            amount,
+            owner
         })
 
         res.status(201).json({ success: true, data: newPost })

@@ -40,6 +40,7 @@ router.route('/signup').post(async (req, res) => {
 
 router.route('/login').post(async (req, res) => {
     const { username, password } = req.body
+    console.log(req.body)
     if (!username || !password) return res.status(400).json({ message: "Complete the fields" })
     try {
         const user = await User.findOne({ username })

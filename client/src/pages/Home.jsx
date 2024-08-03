@@ -26,8 +26,10 @@ const Home = () => {
     useEffect(() => {
         const fetchPosts = async () => {
             setLoading(true)
+            const baseURL = 'https://dall-e-api-h45e.onrender.com/api/v1/post'
             try {
-                const response = await fetch('https://dall-e-api-h45e.onrender.com/api/v1/post', {
+                console.log(import.meta.env)
+                const response = await fetch(baseURL, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -39,7 +41,7 @@ const Home = () => {
                     setAllPosts(result.data.reverse())
                 }
             } catch (error) {
-                alert(error)
+                alert("Error")
             } finally {
                 setLoading(false)
             }
@@ -71,7 +73,7 @@ const Home = () => {
                 </p>
             </div>
             <div className='mt-16'>
-                <FormField 
+                <FormField
                     labelName='Search posts'
                     type='text'
                     name='text'
