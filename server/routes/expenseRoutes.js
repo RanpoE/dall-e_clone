@@ -7,11 +7,13 @@ dotenv.config()
 const router = express.Router()
 
 router.route('/').get(async (req, res) => {
-    const { date, owner } = req.query
+    const { date, owner, endDate } = req.query
+    if (!date || !owner) return res.status(500).json({message: 'Missing queries'})
     try {
         const result = await ExpenseModel.find({
             date_created: {
-                $gt: new Date(date)
+                $gte: new Date(date),
+                $lte: new Date(endDate || date)
             },
             owner
         })
