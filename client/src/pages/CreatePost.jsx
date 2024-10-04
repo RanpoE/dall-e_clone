@@ -23,7 +23,7 @@ const CreatePost = () => {
 
       try {
         console.log(form)
-        const response = await fetch('https://dall-e-api-h45e.onrender.com/api/v1/post', {
+        const response = await fetch(process.env.BACKEND_URL, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
