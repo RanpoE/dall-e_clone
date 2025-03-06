@@ -12,8 +12,8 @@ router.route('/').get(async (req, res) => {
     try {
         const result = await ExpenseModel.find({
             date_created: {
-                $gte: new Date(date),
-                $lte: new Date(endDate || date)
+                $gte: date,
+                $lte: endDate || date
             },
             owner
         })
