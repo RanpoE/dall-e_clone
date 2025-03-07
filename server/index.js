@@ -30,43 +30,43 @@ const http = createServer(app)
 let peers = []
 
 // Socket functions
-const io = new Server(http, { cors: { origin: '*', methods: ["GET", "POST"] } })
-io.listen(4000)
+// const io = new Server(http, { cors: { origin: '*', methods: ["GET", "POST"] } })
+// io.listen(4000)
 
-io.on('connection', (socket) => {
-    console.log('User has connected');
+// io.on('connection', (socket) => {
+//     console.log('User has connected');
 
-    // peers.push(socket.id);
+//     // peers.push(socket.id);
 
-    // socket.emit('peers', peers)
-    socket.on('offer', (data) => {
-        console.log(data)
-        // io.to(data.target).emit('offer', { offer: data.offer, sender: socket.id })
-    })
-
-
-    socket.on('update_location', async (locationData) => {
-        console.log('updating location', locationData)
-
-        const { userId } = locationData
+//     // socket.emit('peers', peers)
+//     socket.on('offer', (data) => {
+//         console.log(data)
+//         // io.to(data.target).emit('offer', { offer: data.offer, sender: socket.id })
+//     })
 
 
-        await LocationModel.findOneAndUpdate(
-            { userId },
-            locationData,
-            { upsert: true }
-        )
+//     socket.on('update_location', async (locationData) => {
+//         console.log('updating location', locationData)
 
-        socket.broadcast.emit('location_update', locationData)
-    })
+//         const { userId } = locationData
 
 
-    socket.emit('message', { message: `Welcome on this server.` })
-    socket.on('disconnect', () => {
-        console.log('User has left')
-    })
+//         await LocationModel.findOneAndUpdate(
+//             { userId },
+//             locationData,
+//             { upsert: true }
+//         )
 
-})
+//         socket.broadcast.emit('location_update', locationData)
+//     })
+
+
+//     socket.emit('message', { message: `Welcome on this server.` })
+//     socket.on('disconnect', () => {
+//         console.log('User has left')
+//     })
+
+// })
 
 // Server routes
 
