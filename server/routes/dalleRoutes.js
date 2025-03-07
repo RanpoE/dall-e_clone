@@ -2,6 +2,7 @@ import express from 'express'
 import * as dotenv from 'dotenv'
 import { Configuration, OpenAIApi } from 'openai'
 import verifyToken from '../middlewares/verifyToken.js'
+import authenticateUser from '../middlewares/authUser.js'
 dotenv.config()
 
 const router = express.Router()
@@ -12,7 +13,7 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration)
 
-router.route('/').get(verifyToken, (req, res) => {
+router.route('/').get(authenticateUser, (req, res) => {
     res.send('Hello from dalle')
 })
 
