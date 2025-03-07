@@ -4,6 +4,8 @@ import cors from 'cors'
 import { Server } from 'socket.io'
 import { createServer } from 'http'
 
+// import { initializeApp, cert } from 'firebase-admin/app';
+
 import connectDB from './mongodb/connect.js'
 import LocationModel from './mongodb/models/location.js'
 
@@ -15,15 +17,15 @@ import galleyRoutes from './routes/galleryRoutes.js'
 import authRoutes from './routes/authRoutes.js'
 import expenseRoutes from './routes/expenseRoutes.js'
 import locationRoutes from './routes/locationRoutes.js'
+import userRoutes from "./routes/userRoutes.js"
 
-// import { Server as httpServ } from 'http'
+import { initializeFirebase } from './utils/firebase.js'
 
 
 dotenv.config()
 
 const app = express()
 const http = createServer(app)
-
 // New features
 let peers = []
 
@@ -42,13 +44,18 @@ let peers = []
 //         // io.to(data.target).emit('offer', { offer: data.offer, sender: socket.id })
 //     })
 
+
 //     socket.on('update_location', async (locationData) => {
-        
-//         // await LocationModel.findOneAndUpdate(
-//         //     {userId: socket.id},
-//         //     locationData,
-//         //     { upsert: true }
-//         // )
+//         console.log('updating location', locationData)
+
+//         const { userId } = locationData
+
+
+//         await LocationModel.findOneAndUpdate(
+//             { userId },
+//             locationData,
+//             { upsert: true }
+//         )
 
 //         socket.broadcast.emit('location_update', locationData)
 //     })
@@ -73,6 +80,7 @@ app.use('/api/v1/gallery', galleyRoutes)
 app.use('/api/v1/auth', authRoutes)
 app.use('/api/v1/expense', expenseRoutes)
 app.use('/api/v1/location', locationRoutes)
+app.use('/api/v1/users', userRoutes)
 
 app.get('/', async (req, res) => {
     res.send('Hello from Server.')
@@ -83,6 +91,7 @@ app.get('/', async (req, res) => {
 
 const startServer = async () => {
     try {
+        await initializeFirebase()
         connectDB(process.env.MONGODB_URL)
         app.listen(8080, () => console.log('Server has started on port 8080'))
     } catch (err) {
