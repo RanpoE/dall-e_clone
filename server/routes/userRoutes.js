@@ -9,7 +9,8 @@ const router = express.Router()
 
 router.route('/').get(authenticateUser, async (req, res) => {
     try {
-        const result = await getUsers()
+        const currentUserId = req.user.uid;
+        const result = await getUsers(currentUserId)
         return res.status(200).send(result)
     } catch (error) {
         return res.status(500).json({ message: error })
